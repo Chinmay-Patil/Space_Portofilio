@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "types": ["react", "@react-three/fiber"]
+  },
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
