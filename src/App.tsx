@@ -1,4 +1,4 @@
-import { Canvas, useThree } from '@react-three/fiber';
+import { Canvas } from '@react-three/fiber';
 import { Model } from './models/earth/earth';
 import { Stars } from '@react-three/drei';
 import {
@@ -15,7 +15,6 @@ import { ConatactScene } from './scenes/contactScene';
 import { Loader } from './components/loader';
 
 function Scene() {
-  const { camera } = useThree();
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {

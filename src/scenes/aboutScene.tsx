@@ -43,7 +43,7 @@ export function AboutScene(props: JSX.IntrinsicElements['group']) {
   ) as unknown as GLTFResult;
   const innerBodyRef = useRef<THREE.Mesh>(null);
   const outerBodyRef = useRef<THREE.Mesh>(null);
-  const [hovered, setHovered] = useState(false);
+  const [_, setHovered] = useState(false);
   const navigate = useNavigate();
   const { camera, controls } = useThree();
   const [isAnimating, setIsAnimating] = useState(true);

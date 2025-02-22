@@ -106,7 +106,6 @@ function TechIcon({
   position,
   Icon,
   label,
-  Iconcolor,
 }: {
   position: [number, number, number];
   Icon: typeof FaReact | undefined;
@@ -159,7 +158,7 @@ export function KnowledgeScene(props: JSX.IntrinsicElements['group']) {
   const innerBodyRef = useRef<THREE.Mesh>(null);
   const outerBodyRef = useRef<THREE.Mesh>(null);
   const { domElement } = useThree((state) => state.gl);
-  const [hovered, setHovered] = useState(false);
+  const [_, setHovered] = useState(false);
 
   const [isAnimating, setIsAnimating] = useState(true);
   const startPosition = new THREE.Vector3(0, 0, 50); // Start from far behind

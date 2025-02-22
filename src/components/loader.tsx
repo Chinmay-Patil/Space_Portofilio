@@ -1,4 +1,4 @@
-import { Stars, Text } from '@react-three/drei';
+import { Text } from '@react-three/drei';
 import { useEffect, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';

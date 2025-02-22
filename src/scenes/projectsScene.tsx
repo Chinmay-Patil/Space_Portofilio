@@ -51,7 +51,7 @@ export function ProjectScene(props: JSX.IntrinsicElements['group']) {
   const profyloref = useRef<HTMLDivElement>(null);
   const PDFriendRef = useRef<HTMLDivElement>(null);
   const reccycleRef = useRef<HTMLDivElement>(null);
-  const [hovered, setHovered] = useState(false);
+  const [_, setHovered] = useState(false);
   const navigate = useNavigate();
   const { domElement } = useThree((state) => state.gl);
   useEffect(() => {

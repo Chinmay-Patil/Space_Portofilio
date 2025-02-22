@@ -50,7 +50,7 @@ export function ConatactScene(props: JSX.IntrinsicElements['group']) {
   const endPosition = new THREE.Vector3(0, 0, 9); // Final position\
   const innerBodyRef = useRef<THREE.Mesh>(null);
   const outerBodyRef = useRef<THREE.Mesh>(null);
-  const [hovered, setHovered] = useState(false);
+  const [_, setHovered] = useState(false);
   const { domElement } = useThree((state) => state.gl);
   const navigate = useNavigate();
   useEffect(() => {
