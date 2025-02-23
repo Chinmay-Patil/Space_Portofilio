@@ -3,12 +3,13 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://chinmay-patil.github.io/Space_Portofilio/",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy": "npm run build && git checkout gh-pages && git reset --hard origin/gh-pages && cp -r dist/* . && git add . && git commit -m 'Deploy to GitHub Pages' && git push origin gh-pages --force && git checkout main"
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
