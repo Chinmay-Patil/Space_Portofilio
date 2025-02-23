@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber';
-import { Model } from './models/earth/earth';
+import { Model } from './models/earth';
 import { Stars } from '@react-three/drei';
 import {
   BrowserRouter as Router,

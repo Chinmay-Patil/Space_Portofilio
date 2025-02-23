@@ -39,7 +39,7 @@ type GLTFResult = GLTF & {
 
 export function AboutScene(props: JSX.IntrinsicElements['group']) {
   const { nodes, materials } = useGLTF(
-    'src/models/earth/space_boi.glb',
+    'public/models/space_boi.glb',
   ) as unknown as GLTFResult;
   const innerBodyRef = useRef<THREE.Mesh>(null);
   const outerBodyRef = useRef<THREE.Mesh>(null);
@@ -170,7 +170,7 @@ export function AboutScene(props: JSX.IntrinsicElements['group']) {
             color="#ffffff"
             anchorX="center"
             anchorY="middle"
-            font="src/fonts/SpaceMono-Bold.ttf"
+            font="/fonts/SpaceMono-Bold.ttf"
             material-toneMapped={false}
           >
             Hey, I'm Chinmay Patil
@@ -182,7 +182,7 @@ export function AboutScene(props: JSX.IntrinsicElements['group']) {
               fontSize={6}
               anchorX="center"
               anchorY="middle"
-              font="src/fonts/SpaceMono-Regular.ttf"
+              font="/fonts/SpaceMono-Regular.ttf"
             >
               A software engineer who loves building cool things, whether it’s
               in the digital world or the real one.{'\n'}
@@ -253,4 +253,4 @@ export function AboutScene(props: JSX.IntrinsicElements['group']) {
   );
 }
 
-useGLTF.preload('/space_boi.glb');
+useGLTF.preload('public/models/space_boi.glb');

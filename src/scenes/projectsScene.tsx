@@ -40,7 +40,7 @@ type GLTFResult = GLTF & {
 
 export function ProjectScene(props: JSX.IntrinsicElements['group']) {
   const { nodes, materials } = useGLTF(
-    'src/models/earth/space_boi.glb',
+    '/models/space_boi.glb',
   ) as unknown as GLTFResult;
   const { camera, controls } = useThree();
   const [isAnimating, setIsAnimating] = useState(true);
@@ -429,4 +429,4 @@ export function ProjectScene(props: JSX.IntrinsicElements['group']) {
   );
 }
 
-useGLTF.preload('/space_boi.glb');
+useGLTF.preload('/models/space_boi.glb');

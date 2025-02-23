@@ -3,7 +3,6 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://chinmay-patil.github.io/Space_Portofilio/",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

@@ -152,7 +152,7 @@ function TechIcon({
 export function KnowledgeScene(props: JSX.IntrinsicElements['group']) {
   const navigate = useNavigate();
   const { nodes, materials } = useGLTF(
-    'src/models/earth/space_boi.glb',
+    '/models/space_boi.glb',
   ) as unknown as GLTFResult;
   const { camera, controls } = useThree();
   const innerBodyRef = useRef<THREE.Mesh>(null);
@@ -386,4 +386,4 @@ export function KnowledgeScene(props: JSX.IntrinsicElements['group']) {
   );
 }
 
-useGLTF.preload('/space_boi.glb');
+useGLTF.preload('/models/space_boi.glb');
