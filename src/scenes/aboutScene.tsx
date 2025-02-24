@@ -39,7 +39,7 @@ type GLTFResult = GLTF & {
 
 export function AboutScene(props: JSX.IntrinsicElements['group']) {
   const { nodes, materials } = useGLTF(
-    'public/models/space_boi.glb',
+    '/models/space_boi.glb',
   ) as unknown as GLTFResult;
   const innerBodyRef = useRef<THREE.Mesh>(null);
   const outerBodyRef = useRef<THREE.Mesh>(null);
@@ -253,4 +253,4 @@ export function AboutScene(props: JSX.IntrinsicElements['group']) {
   );
 }
 
-useGLTF.preload('public/models/space_boi.glb');
+useGLTF.preload('/models/space_boi.glb');
