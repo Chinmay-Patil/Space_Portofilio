@@ -48,7 +48,7 @@ type GLTFResult = GLTF & {
 };
 
 export function Model(props: JSX.IntrinsicElements['group']) {
-  const { nodes, materials } = useGLTF('/models/spaceship.glb') as GLTFResult;
+  const { nodes, materials } = useGLTF('./models/spaceship.glb') as GLTFResult;
   return (
     <group {...props} dispose={null}>
       <group rotation={[-Math.PI / 30, Math.PI / 9, Math.PI / 2]} scale={0.5}>

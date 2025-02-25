@@ -45,7 +45,7 @@ export function Model({ setTransitioning, setTransitionSpeed, ...props }: any) {
   const { camera, controls } = useThree();
   const navigate = useNavigate();
 
-  const { nodes, materials } = useGLTF('/models/space_boi.glb') as GLTFResult;
+  const { nodes, materials } = useGLTF('./models/space_boi.glb') as GLTFResult;
   const [clickedAbout, setAboutClicked] = useState(false);
   const [clickedKnowledge, setKnowLedgeClicked] = useState(false);
   const [clickedProjects, setProjectsClicked] = useState(false);
