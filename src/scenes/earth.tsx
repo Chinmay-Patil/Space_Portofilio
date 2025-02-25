@@ -6,6 +6,7 @@ import { useThree } from '@react-three/fiber';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { OrbitControls } from '@react-three/drei';
+import { motion } from 'motion/react';
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -45,9 +46,7 @@ export function Model({ setTransitioning, setTransitionSpeed, ...props }: any) {
   const { camera, controls } = useThree();
   const navigate = useNavigate();
 
-  const { nodes, materials } = useGLTF(
-    './models/space_boi.glb',
-  ) as GLTFResult;
+  const { nodes, materials } = useGLTF('./models/space_boi.glb') as GLTFResult;
   const [clickedAbout, setAboutClicked] = useState(false);
   const [clickedKnowledge, setKnowLedgeClicked] = useState(false);
   const [clickedProjects, setProjectsClicked] = useState(false);
@@ -316,185 +315,190 @@ export function Model({ setTransitioning, setTransitionSpeed, ...props }: any) {
 
   return (
     <>
-      <OrbitControls
-        ref={controlsRef}
-        enabled={orbitEnabled}
-        maxDistance={20}
-        minDistance={5}
-      />
-      <group {...props} dispose={null}>
-        <group scale={0.01} position={[0, -3, 0]}>
-          <group rotation={[-Math.PI / 2, 0, 0]} scale={40}>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
+        <OrbitControls
+          ref={controlsRef}
+          enabled={orbitEnabled}
+          maxDistance={20}
+          minDistance={5}
+        />
+        <group {...props} dispose={null}>
+          <group scale={0.01} position={[0, -3, 0]}>
+            <group rotation={[-Math.PI / 2, 0, 0]} scale={40}>
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.body_Material001_0.geometry}
+                material={materials['Material.001']}
+              />
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.body_Material002_0.geometry}
+                material={materials['Material.002']}
+              />
+            </group>
+            <group
+              position={[-357.404, 392.646, 0]}
+              rotation={[-Math.PI / 2, 0, 0]}
+              scale={39.706}
+            >
+              <mesh
+                ref={knowledgeMeshRef}
+                castShadow
+                receiveShadow
+                geometry={nodes.Sphere002_Material001_0.geometry}
+                material={materials['Material.001']}
+                onClick={handleKnowledgeClicked}
+              />
+              <mesh
+                ref={knowledgeMeshRef}
+                castShadow
+                receiveShadow
+                geometry={nodes.Sphere002_Material002_0.geometry}
+                material={materials['Material.002']}
+                onClick={handleKnowledgeClicked}
+              />
+            </group>
+            <group
+              position={[199.634, 566.883, -221.001]}
+              rotation={[-Math.PI / 2, 0, 0]}
+              scale={39.706}
+            >
+              <mesh
+                ref={aboutMeshRef}
+                castShadow
+                receiveShadow
+                geometry={nodes.Sphere007_Material001_0.geometry}
+                material={materials['Material.001']}
+                onClick={handleAboutClicked}
+              >
+                <Text
+                  position={[-1.9, 0, 0]} // Adjust this based on your sphere’s size
+                  fontSize={1.3}
+                  rotation={[Math.PI / 2, 0, 0]} // Corrected rotation syntax
+                  color={clickedAbout ? 'gray' : 'white'} // Change text color on click
+                  anchorX="center"
+                  anchorY="middle"
+                >
+                  ab
+                </Text>
+                <Text
+                  position={[2.1, 0, 0]} // Adjust this based on your sphere’s size
+                  fontSize={1.3}
+                  rotation={[Math.PI / 2, 0, 0]} // Corrected rotation syntax
+                  color={clickedAbout ? 'gray' : 'white'} // Change text color on click
+                  anchorX="center"
+                  anchorY="middle"
+                >
+                  ut
+                </Text>
+              </mesh>
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Sphere007_Material002_0.geometry}
+                material={materials['Material.002']}
+              />
+            </group>
             <mesh
               castShadow
               receiveShadow
-              geometry={nodes.body_Material001_0.geometry}
-              material={materials['Material.001']}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes.body_Material002_0.geometry}
+              geometry={nodes.waves_Material002_0.geometry}
               material={materials['Material.002']}
-            />
-          </group>
-          <group
-            position={[-357.404, 392.646, 0]}
-            rotation={[-Math.PI / 2, 0, 0]}
-            scale={39.706}
-          >
+              rotation={[-Math.PI / 2, 0, 0]}
+              scale={[20, 20, 1.891]}
+            ></mesh>
             <mesh
-              ref={knowledgeMeshRef}
               castShadow
               receiveShadow
-              geometry={nodes.Sphere002_Material001_0.geometry}
-              material={materials['Material.001']}
-              onClick={handleKnowledgeClicked}
-            />
-            <mesh
-              ref={knowledgeMeshRef}
-              castShadow
-              receiveShadow
-              geometry={nodes.Sphere002_Material002_0.geometry}
+              geometry={nodes.waves1_Material002_0.geometry}
               material={materials['Material.002']}
-              onClick={handleKnowledgeClicked}
+              rotation={[-Math.PI / 2, 0, 0]}
+              scale={[20, 20, 1.891]}
             />
-          </group>
-          <group
-            position={[199.634, 566.883, -221.001]}
-            rotation={[-Math.PI / 2, 0, 0]}
-            scale={39.706}
-          >
             <mesh
-              ref={aboutMeshRef}
               castShadow
               receiveShadow
-              geometry={nodes.Sphere007_Material001_0.geometry}
+              geometry={nodes.waves2_Material002_0.geometry}
+              material={materials['Material.002']}
+              position={[92.464, 15.529, 2.112]}
+              rotation={[-Math.PI / 2, 0, 0]}
+              scale={[20, 20, 1.891]}
+            />
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.particles_Material002_0.geometry}
+              material={materials['Material.002']}
+              position={[489.69, 793.811, 355.293]}
+              rotation={[-Math.PI / 2, 0, -Math.PI / 2]}
+              scale={20.408}
+            />
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Sphere_Material001_0.geometry}
               material={materials['Material.001']}
-              onClick={handleAboutClicked}
+              position={[375.469, 427.948, 0]}
+              rotation={[-Math.PI / 2, 0, 0]}
+              scale={62.402}
+            />
+            <mesh
+              ref={contactMeshRef}
+              castShadow
+              receiveShadow
+              geometry={nodes.Sphere001_Material002_0.geometry}
+              material={materials['Material.002']}
+              position={[375.469, 427.948, 0]}
+              rotation={[-Math.PI / 2, 0, 0]}
+              scale={60.324}
+              onClick={handleContactClicked}
             >
               <Text
                 position={[-1.9, 0, 0]} // Adjust this based on your sphere’s size
                 fontSize={1.3}
                 rotation={[Math.PI / 2, 0, 0]} // Corrected rotation syntax
-                color={clickedAbout ? 'gray' : 'white'} // Change text color on click
+                color={clickedContact ? 'gray' : 'white'} // Change text color on click
                 anchorX="center"
                 anchorY="middle"
               >
-                ab
+                c
               </Text>
               <Text
-                position={[2.1, 0, 0]} // Adjust this based on your sphere’s size
+                position={[3.1, 0, 0]} // Adjust this based on your sphere’s size
                 fontSize={1.3}
                 rotation={[Math.PI / 2, 0, 0]} // Corrected rotation syntax
-                color={clickedAbout ? 'gray' : 'white'} // Change text color on click
+                color={clickedContact ? 'gray' : 'white'} // Change text color on click
                 anchorX="center"
                 anchorY="middle"
               >
-                ut
+                ntact
               </Text>
             </mesh>
             <mesh
               castShadow
               receiveShadow
-              geometry={nodes.Sphere007_Material002_0.geometry}
+              geometry={nodes.Sphere004_Material002_0.geometry}
               material={materials['Material.002']}
+              position={[375.469, 427.948, 0]}
+              rotation={[-0.688, 0, 0]}
+              scale={[104.129, 81.609, 0]}
             />
-          </group>
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes.waves_Material002_0.geometry}
-            material={materials['Material.002']}
-            rotation={[-Math.PI / 2, 0, 0]}
-            scale={[20, 20, 1.891]}
-          ></mesh>
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes.waves1_Material002_0.geometry}
-            material={materials['Material.002']}
-            rotation={[-Math.PI / 2, 0, 0]}
-            scale={[20, 20, 1.891]}
-          />
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes.waves2_Material002_0.geometry}
-            material={materials['Material.002']}
-            position={[92.464, 15.529, 2.112]}
-            rotation={[-Math.PI / 2, 0, 0]}
-            scale={[20, 20, 1.891]}
-          />
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes.particles_Material002_0.geometry}
-            material={materials['Material.002']}
-            position={[489.69, 793.811, 355.293]}
-            rotation={[-Math.PI / 2, 0, -Math.PI / 2]}
-            scale={20.408}
-          />
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes.Sphere_Material001_0.geometry}
-            material={materials['Material.001']}
-            position={[375.469, 427.948, 0]}
-            rotation={[-Math.PI / 2, 0, 0]}
-            scale={62.402}
-          />
-          <mesh
-            ref={contactMeshRef}
-            castShadow
-            receiveShadow
-            geometry={nodes.Sphere001_Material002_0.geometry}
-            material={materials['Material.002']}
-            position={[375.469, 427.948, 0]}
-            rotation={[-Math.PI / 2, 0, 0]}
-            scale={60.324}
-            onClick={handleContactClicked}
-          >
-            <Text
-              position={[-1.9, 0, 0]} // Adjust this based on your sphere’s size
-              fontSize={1.3}
-              rotation={[Math.PI / 2, 0, 0]} // Corrected rotation syntax
-              color={clickedContact ? 'gray' : 'white'} // Change text color on click
-              anchorX="center"
-              anchorY="middle"
-            >
-              c
-            </Text>
-            <Text
-              position={[3.1, 0, 0]} // Adjust this based on your sphere’s size
-              fontSize={1.3}
-              rotation={[Math.PI / 2, 0, 0]} // Corrected rotation syntax
-              color={clickedContact ? 'gray' : 'white'} // Change text color on click
-              anchorX="center"
-              anchorY="middle"
-            >
-              ntact
-            </Text>
-          </mesh>
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes.Sphere004_Material002_0.geometry}
-            material={materials['Material.002']}
-            position={[375.469, 427.948, 0]}
-            rotation={[-0.688, 0, 0]}
-            scale={[104.129, 81.609, 0]}
-          />
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes.Sphere005_Material001_0.geometry}
-            material={materials['Material.001']}
-            position={[-341.988, 460.196, -117.028]}
-            rotation={[-Math.PI / 2, 0, 0]}
-            scale={62.402}
-          />
-          {/* <mesh
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Sphere005_Material001_0.geometry}
+              material={materials['Material.001']}
+              position={[-341.988, 460.196, -117.028]}
+              rotation={[-Math.PI / 2, 0, 0]}
+              scale={62.402}
+            />
+            {/* <mesh
           castShadow
           receiveShadow
           geometry={nodes.Sphere006_Material002_0.geometry}
@@ -503,90 +507,91 @@ export function Model({ setTransitioning, setTransitionSpeed, ...props }: any) {
           rotation={[-Math.PI / 2, 0, 0]}
           scale={60.324}
         /> */}
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes.Sphere009_Material002_0.geometry}
-            material={materials['Material.002']}
-            position={[507.522, 667.594, -214.475]}
-            rotation={[-Math.PI / 2, 0, 0]}
-            scale={16.881}
-          />
-          <mesh
-            ref={projectsMeshRef}
-            castShadow
-            receiveShadow
-            geometry={nodes.Sphere010_Material002_0.geometry}
-            material={materials['Material.002']}
-            position={[-287.442, 585.792, -111.857]}
-            rotation={[-Math.PI / 2, 0, 0]}
-            scale={20.881}
-            onClick={handleProjectsClicked}
-          >
-            <Text
-              position={[-1.9, 0, 0]} // Adjust this based on your sphere’s size
-              fontSize={1.3}
-              rotation={[Math.PI / 2, 0, 0]} // Corrected rotation syntax
-              color={clickedProjects ? 'gray' : 'white'} // Change text color on click
-              anchorX="center"
-              anchorY="middle"
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Sphere009_Material002_0.geometry}
+              material={materials['Material.002']}
+              position={[507.522, 667.594, -214.475]}
+              rotation={[-Math.PI / 2, 0, 0]}
+              scale={16.881}
+            />
+            <mesh
+              ref={projectsMeshRef}
+              castShadow
+              receiveShadow
+              geometry={nodes.Sphere010_Material002_0.geometry}
+              material={materials['Material.002']}
+              position={[-287.442, 585.792, -111.857]}
+              rotation={[-Math.PI / 2, 0, 0]}
+              scale={20.881}
+              onClick={handleProjectsClicked}
             >
-              pr
-            </Text>
-            <Text
-              position={[2.7, 0, 0]} // Adjust this based on your sphere’s size
-              fontSize={1.3}
-              rotation={[Math.PI / 2, 0, 0]} // Corrected rotation syntax
-              color={clickedProjects ? 'gray' : 'white'} // Change text color on click
-              anchorX="center"
-              anchorY="middle"
+              <Text
+                position={[-1.9, 0, 0]} // Adjust this based on your sphere’s size
+                fontSize={1.3}
+                rotation={[Math.PI / 2, 0, 0]} // Corrected rotation syntax
+                color={clickedProjects ? 'gray' : 'white'} // Change text color on click
+                anchorX="center"
+                anchorY="middle"
+              >
+                pr
+              </Text>
+              <Text
+                position={[2.7, 0, 0]} // Adjust this based on your sphere’s size
+                fontSize={1.3}
+                rotation={[Math.PI / 2, 0, 0]} // Corrected rotation syntax
+                color={clickedProjects ? 'gray' : 'white'} // Change text color on click
+                anchorX="center"
+                anchorY="middle"
+              >
+                jects
+              </Text>
+            </mesh>
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Sphere011_Material002_0.geometry}
+              material={materials['Material.002']}
+              position={[-553.462, 331.074, -379.067]}
+              rotation={[-Math.PI / 2, 0, 0]}
+              scale={11.437}
+            />
+            <mesh
+              ref={knowledgeMeshRef}
+              castShadow
+              receiveShadow
+              geometry={nodes.Sphere003_Material002_0.geometry}
+              material={materials['Material.002']}
+              position={[-357.404, 392.646, 0]}
+              rotation={[-Math.PI / 2, 0, 0]}
+              scale={40.075}
+              onClick={handleKnowledgeClicked}
             >
-              jects
-            </Text>
-          </mesh>
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes.Sphere011_Material002_0.geometry}
-            material={materials['Material.002']}
-            position={[-553.462, 331.074, -379.067]}
-            rotation={[-Math.PI / 2, 0, 0]}
-            scale={11.437}
-          />
-          <mesh
-            ref={knowledgeMeshRef}
-            castShadow
-            receiveShadow
-            geometry={nodes.Sphere003_Material002_0.geometry}
-            material={materials['Material.002']}
-            position={[-357.404, 392.646, 0]}
-            rotation={[-Math.PI / 2, 0, 0]}
-            scale={40.075}
-            onClick={handleKnowledgeClicked}
-          >
-            <Text
-              position={[-1.8, 0, 0]} // Adjust this based on your sphere’s size
-              fontSize={1.2}
-              rotation={[Math.PI / 2, 0, 0]}
-              color={clickedKnowledge ? 'gray' : 'white'}
-              anchorX="center"
-              anchorY="middle"
-            >
-              kn
-            </Text>
-            <Text
-              position={[3.1, 0, 0]} // Adjust this based on your sphere’s size
-              fontSize={1.2}
-              rotation={[Math.PI / 2, 0, 0]}
-              color={clickedKnowledge ? 'gray' : 'white'}
-              anchorX="center"
-              anchorY="middle"
-            >
-              wledge
-            </Text>
-          </mesh>
+              <Text
+                position={[-1.8, 0, 0]} // Adjust this based on your sphere’s size
+                fontSize={1.2}
+                rotation={[Math.PI / 2, 0, 0]}
+                color={clickedKnowledge ? 'gray' : 'white'}
+                anchorX="center"
+                anchorY="middle"
+              >
+                kn
+              </Text>
+              <Text
+                position={[3.1, 0, 0]} // Adjust this based on your sphere’s size
+                fontSize={1.2}
+                rotation={[Math.PI / 2, 0, 0]}
+                color={clickedKnowledge ? 'gray' : 'white'}
+                anchorX="center"
+                anchorY="middle"
+              >
+                wledge
+              </Text>
+            </mesh>
+          </group>
         </group>
-      </group>
+      </motion.div>
     </>
   );
 }
