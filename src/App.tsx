@@ -33,7 +33,7 @@ function Scene() {
       <color attach="background" args={['#000000']} />
 
       <Stars
-        radius={200}
+        radius={500}
         depth={100}
         count={5000}
         factor={4}
