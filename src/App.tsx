@@ -51,20 +51,11 @@ function Scene() {
       ) : (
         <Suspense fallback={<Loader />}>
           <Routes>
-            <Route path="/Space_Portfolio" element={<Model />} />
-            <Route path="/Space_Portfolio/about" element={<AboutScene />} />
-            <Route
-              path="/Space_Portfolio/knowledge"
-              element={<KnowledgeScene />}
-            />
-            <Route
-              path="/Space_Portfolio/projects"
-              element={<ProjectScene />}
-            />
-            <Route
-              path="/Space_Portfolio/contact"
-              element={<ConatactScene />}
-            />
+            <Route path="/" element={<Model />} />
+            <Route path="/about" element={<AboutScene />} />
+            <Route path="/knowledge" element={<KnowledgeScene />} />
+            <Route path="/projects" element={<ProjectScene />} />
+            <Route path="/contact" element={<ConatactScene />} />
           </Routes>
         </Suspense>
       )}
@@ -77,7 +68,7 @@ function Scene() {
 
 export default function App() {
   return (
-    <Router basename="/Space_Portfolio">
+    <Router>
       <div style={{ width: '100vw', height: '100vh', overflow: 'hidden' }}>
         <Canvas>
           <Scene />
