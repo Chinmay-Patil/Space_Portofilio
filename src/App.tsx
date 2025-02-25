@@ -51,7 +51,7 @@ function Scene() {
       ) : (
         <Suspense fallback={<Loader />}>
           <Routes>
-            <Route path="/" element={<Model />} />
+            <Route path="/Space_Portofilio" element={<Model />} />
             <Route path="/about" element={<AboutScene />} />
             <Route path="/knowledge" element={<KnowledgeScene />} />
             <Route path="/projects" element={<ProjectScene />} />
