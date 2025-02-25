@@ -161,7 +161,6 @@ export function ConatactScene(props: JSX.IntrinsicElements['group']) {
   const { domElement } = useThree((state) => state.gl);
   const navigate = useNavigate();
   const IconRef = useRef<HTMLDivElement>(null);
-  const groupRef = useRef<THREE.Group>(null);
   useEffect(() => {
     // Disable controls during animation
     if (controls) {
