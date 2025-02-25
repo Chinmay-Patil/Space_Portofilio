@@ -50,18 +50,17 @@ export function AboutScene(props: JSX.IntrinsicElements['group']) {
   const { domElement } = useThree((state) => state.gl);
   const startPosition = new THREE.Vector3(0, 0, 50); // Start from far behind
   const endPosition = new THREE.Vector3(0, 0, 9); // Final position
+  const titleRef = useRef<THREE.Group>(null);
+  const textRef = useRef<THREE.Group>(null);
   useEffect(() => {
-    // Disable controls during animation
     if (controls) {
       //@ts-ignore
       controls.enabled = !isAnimating;
     }
 
-    // Set initial camera position
     camera.position.copy(startPosition);
     camera.lookAt(0, 0, 0);
 
-    // // Create GSAP timeline
     const tl = gsap.timeline({
       onComplete: () => {
         setIsAnimating(false);
@@ -80,44 +79,53 @@ export function AboutScene(props: JSX.IntrinsicElements['group']) {
       },
     });
 
+    // Camera movement
     tl.to(camera.position, {
       x: endPosition.x,
       y: endPosition.y,
       z: endPosition.z,
       duration: 4,
       ease: 'power2.inOut',
-      onUpdate: () => {
-        camera.lookAt(0, 0, 0);
-      },
+      onUpdate: () => camera.lookAt(0, 0, 0),
     });
 
+    // Body animation
     tl.fromTo(
-      //@ts-ignore
-      [innerBodyRef.current.position, outerBodyRef.current.position],
-      {
-        y: 100,
-      },
+      [innerBodyRef.current?.position, outerBodyRef.current?.position],
+      { y: 100 },
       {
         y: 0,
         duration: 1,
         ease: 'power2.out',
       },
-      '-=0.5', // Start slightly before camera animation ends
+      '-=0.5',
+    );
+
+    // Text fade in
+    tl.to([textRef.current, titleRef.current], {
+      opacity: 0,
+      duration: 0,
+      fillOpacity: 0,
+    }).to(
+      [textRef.current, titleRef.current],
+      {
+        fillOpacity: 1,
+        duration: 1,
+        delay: 2, // Start after camera animation
+        ease: 'power2.inOut',
+        stagger: 0.1,
+      },
+      '-=2.0',
     );
 
     return () => {
-      // Cleanup
       tl.kill();
       if (controls) {
         //@ts-ignore
         controls.enabled = true;
       }
-      if (innerBodyRef.current) {
-        const material1 = innerBodyRef.current.material as THREE.Material;
-        material1.dispose();
-      }
     };
-  }, [camera, controls, materials]);
+  }, [camera, controls]);
 
   return (
     <>
@@ -164,40 +172,48 @@ export function AboutScene(props: JSX.IntrinsicElements['group']) {
               material={materials['Material.002']}
             />
           </group>
-          <Text
-            position={[0, 110, -100]}
-            fontSize={8}
-            color="#ffffff"
-            anchorX="center"
-            anchorY="middle"
-            font="./fonts/SpaceMono-Bold.ttf"
-            material-toneMapped={false}
-          >
-            Hey, I'm Chinmay Patil
-          </Text>
-          <Float speed={1} rotationIntensity={0.1} floatIntensity={0.2}>
+          <group>
             <Text
-              position={[20, 25, -100]}
-              maxWidth={500}
-              fontSize={6}
+              position={[0, 110, -100]}
+              fontSize={8}
+              color="#ffffff"
               anchorX="center"
               anchorY="middle"
-              font="./fonts/SpaceMono-Regular.ttf"
+              font="./fonts/SpaceMono-Bold.ttf"
+              material-toneMapped={false}
+              ref={titleRef}
+              fillOpacity={0}
             >
-              A software engineer who loves building cool things, whether it’s
-              in the digital world or the real one.{'\n'}
-              {'\n'}By day, I solve problems, automate the mundane, and make
-              tech work smarter.{'\n'}
-              {'\n'}
-              By night, I’m either behind a camera, cooking up something new, or
-              lost in a music project. {'\n'} {'\n'}I have a habit of turning
-              curiosity into creative experiments—whether that means capturing
-              the perfect shot, making beats, or{'\n'}
-              {'\n'}figuring out how to make a dish taste just right. {'\n'}
-              {'\n'}Always up for a chat about tech, photography, or the best
-              way to brew a great cup of coffee.{'\n'}
-              {'\n'}Let’s connect!
+              Hey, I'm Chinmay Patil
             </Text>
+          </group>
+          <Float speed={1} rotationIntensity={0.1} floatIntensity={0.2}>
+            <group>
+              <Text
+                position={[20, 25, -100]}
+                maxWidth={500}
+                fontSize={6}
+                anchorX="center"
+                anchorY="middle"
+                font="./fonts/SpaceMono-Regular.ttf"
+                ref={textRef}
+                fillOpacity={0}
+              >
+                A software engineer who loves building cool things, whether it’s
+                in the digital world or the real one.{'\n'}
+                {'\n'}By day, I solve problems, automate the mundane, and make
+                tech work smarter.{'\n'}
+                {'\n'}
+                By night, I’m either behind a camera, cooking up something new,
+                or lost in a music project. {'\n'} {'\n'}I have a habit of
+                turning curiosity into creative experiments—whether that means
+                capturing the perfect shot, making beats, or{'\n'}
+                {'\n'}figuring out how to make a dish taste just right. {'\n'}
+                {'\n'}Always up for a chat about tech, photography, or the best
+                way to brew a great cup of coffee.{'\n'}
+                {'\n'}Let’s connect!
+              </Text>
+            </group>
           </Float>
         </group>
       </group>

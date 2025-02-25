@@ -6,7 +6,7 @@ import { GLTF } from 'three/examples/jsm/Addons.js';
 import gsap from 'gsap';
 import { Model } from '../models/spaceship';
 import { useNavigate } from 'react-router-dom';
-import { FaGithub, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import { FaGithub, FaInstagram, FaLinkedin, FaReact } from 'react-icons/fa';
 import { SiGmail } from 'react-icons/si';
 
 type GLTFResult = GLTF & {
@@ -39,6 +39,112 @@ type GLTFResult = GLTF & {
   };
 };
 
+function ContactIcon({
+  position,
+  Icon,
+  label,
+  ref,
+}: {
+  position: [number, number, number];
+  Icon: typeof FaReact | undefined;
+  label: string | undefined;
+  Iconcolor: string | undefined;
+  ref: React.RefObject<HTMLDivElement | null>;
+}) {
+  const iconRef = useRef<HTMLDivElement>(null);
+  const labelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const tl = gsap.timeline();
+
+    tl.to([iconRef.current, labelRef.current], {
+      opacity: 0,
+      duration: 0,
+    }).to(
+      [iconRef.current, labelRef.current],
+      {
+        opacity: 1,
+        duration: 1,
+        delay: 4, // Start after camera animation
+        ease: 'power2.inOut',
+        stagger: 0.1,
+      },
+      '-=1.0',
+    );
+
+    return () => {
+      tl.kill();
+    };
+  }, []);
+
+  if (!Icon) return null;
+  return (
+    <Float speed={2} rotationIntensity={0.1} floatIntensity={0.1}>
+      <group position={position}>
+        <Html transform distanceFactor={15}>
+          <div ref={iconRef} style={{ opacity: 0 }}>
+            <Icon size={400} color="#FFFFFF" />
+          </div>
+        </Html>
+        <Html
+          transform
+          position={[0, -15, 0]}
+          center
+          distanceFactor={80}
+          ref={ref}
+        >
+          <div
+            ref={labelRef}
+            style={{
+              opacity: 0,
+              color: '#ffffff',
+              fontSize: '24px',
+              fontWeight: 'bold',
+              padding: '10px 20px',
+              background: 'rgba(0,0,0,0.7)',
+              borderRadius: '8px',
+              border: `1px solid #ffffff`,
+            }}
+          >
+            {label}
+          </div>
+        </Html>
+      </group>
+    </Float>
+  );
+}
+
+const ContactIcons = [
+  {
+    position: new THREE.Vector3(-200, 10, -150),
+    Icon: FaLinkedin,
+    label: 'LinkedIn',
+    onclick: () => {},
+    color: '#0077B5',
+  },
+  {
+    position: new THREE.Vector3(-170, 80, -150),
+    Icon: SiGmail,
+    label: 'Gmail',
+    onclick: () => {},
+    color: '#0077B5',
+  },
+  {
+    position: new THREE.Vector3(-70, 60, -150),
+    Icon: FaInstagram,
+    label: 'Instagram',
+    onclick: () => {},
+    color: '#0077B5',
+  },
+  {
+    position: new THREE.Vector3(-80, -30, -150),
+    Icon: FaGithub,
+    label: 'GitHub',
+    onclick: () => {},
+    color: '#0077B5',
+  },
+];
+
 export function ConatactScene(props: JSX.IntrinsicElements['group']) {
   const { nodes, materials } = useGLTF(
     './models/space_boi.glb',
@@ -53,6 +159,7 @@ export function ConatactScene(props: JSX.IntrinsicElements['group']) {
   const [_, setHovered] = useState(false);
   const { domElement } = useThree((state) => state.gl);
   const navigate = useNavigate();
+  const IconRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     // Disable controls during animation
     if (controls) {
@@ -165,152 +272,16 @@ export function ConatactScene(props: JSX.IntrinsicElements['group']) {
             scale={[90.129, 81.609, 0]}
           />
         </group>
-        <Float
-          rotationIntensity={0.5}
-          floatIntensity={0.7}
-          floatingRange={[0, 1]}
-        >
-          <Html position={[70, 85, -130]}>
-            <FaLinkedin
-              size={70}
-              color="#FFFFFF"
-              onClick={() => {
-                window.open('https://www.linkedin.com/in/chinmay-patil-/');
-              }}
-            />
-          </Html>
-          <Html
-            transform
-            position={[80, 58, -130]}
-            center
-            distanceFactor={80} // Reduced from 15 to make text larger
-          >
-            <div
-              style={{
-                color: '#ffffff',
-                fontSize: '20px', // Increased from 14px
-                fontWeight: 'bold',
-                padding: '10px 20px',
-                background: 'rgba(0,0,0,0.7)',
-                borderRadius: '8px',
-                border: `1px solid #ffffff`,
-                // textShadow: '0 0 5px rgba(0,0,0,0.5)',
-              }}
-            >
-              LinkedIn
-            </div>
-          </Html>
-        </Float>
-
-        <Float
-          rotationIntensity={0.5}
-          floatIntensity={0.7}
-          floatingRange={[0, 1]}
-        >
-          <Html position={[-90, 75, -130]}>
-            <SiGmail
-              size={70}
-              color="#FFFFFF"
-              onClick={() => {
-                window.open('mailto:patiilchinmay62@gmail.com');
-              }}
-            />
-          </Html>
-          <Html
-            transform
-            position={[-80, 50, -130]}
-            center
-            distanceFactor={80} // Reduced from 15 to make text larger
-          >
-            <div
-              style={{
-                color: '#ffffff',
-                fontSize: '20px', // Increased from 14px
-                fontWeight: 'bold',
-                padding: '10px 20px',
-                background: 'rgba(0,0,0,0.7)',
-                borderRadius: '8px',
-                border: `1px solid #ffffff`,
-                // textShadow: '0 0 5px rgba(0,0,0,0.5)',
-              }}
-            >
-              Gmail
-            </div>
-          </Html>
-        </Float>
-        <Float
-          rotationIntensity={0.5}
-          floatIntensity={0.7}
-          floatingRange={[0, 1]}
-        >
-          <Html position={[-140, 0, -130]}>
-            <FaInstagram
-              size={70}
-              color="#FFFFFF"
-              onClick={() => {
-                window.open('https://www.instagram.com/1_Vibe_0');
-              }}
-            />
-          </Html>
-          <Html
-            transform
-            position={[-130, -30, -130]}
-            center
-            distanceFactor={80} // Reduced from 15 to make text larger
-          >
-            <div
-              style={{
-                color: '#ffffff',
-                fontSize: '20px', // Increased from 14px
-                fontWeight: 'bold',
-                padding: '10px 20px',
-                background: 'rgba(0,0,0,0.7)',
-                borderRadius: '8px',
-                border: `1px solid #ffffff`,
-                // textShadow: '0 0 5px rgba(0,0,0,0.5)',
-              }}
-            >
-              Instagram
-            </div>
-          </Html>
-        </Float>
-        <Float
-          rotationIntensity={0.5}
-          floatIntensity={0.7}
-          floatingRange={[0, 1]}
-        >
-          <Html position={[140, 0, -130]}>
-            <FaGithub
-              size={70}
-              color="#FFFFFF"
-              onClick={() => {
-                window.open('https://github.com/Chinmay-Patil');
-              }}
-            />
-          </Html>
-          <Html
-            transform
-            position={[150, -30, -130]}
-            center
-            distanceFactor={80} // Reduced from 15 to make text larger
-          >
-            <div
-              style={{
-                color: '#ffffff',
-                fontSize: '20px', // Increased from 14px
-                fontWeight: 'bold',
-                padding: '10px 20px',
-                background: 'rgba(0,0,0,0.7)',
-                borderRadius: '8px',
-                border: `1px solid #ffffff`,
-                opacity: 0.9,
-                // textShadow: '0 0 5px rgba(0,0,0,0.5)',
-              }}
-            >
-              GitHub
-            </div>
-          </Html>
-        </Float>
+        {ContactIcons.map((icon, index) => (
+          <ContactIcon
+            key={index}
+            position={[icon.position.x, icon.position.y, icon.position.z]}
+            Icon={icon.Icon}
+            label={icon.label}
+            Iconcolor={icon.color}
+            ref={IconRef}
+          />
+        ))}
       </group>
 
       <group {...props} dispose={null}>

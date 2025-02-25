@@ -51,54 +51,114 @@ type GLTFResult = GLTF & {
   };
 };
 
-const calculateStaticPosition = (
-  index: number,
-  total: number,
-  radius: number,
-  yOffset: number,
-): [number, number, number] => {
-  const angle = (index / (total - 1)) * Math.PI; // Distribute icons in a semi-circle
-  const x = Math.cos(angle) * radius;
-  const y = yOffset;
-  const z = Math.sin(angle) * radius - 100; // Fixed z-depth with offset
-  return [x, y, z];
-};
-
-const iconPositions = {
-  frontend: (index: number) => calculateStaticPosition(index, 4, -70, -130),
-  backend: (index: number) => calculateStaticPosition(index, 4, 100, -130),
-  cloud: (index: number) => calculateStaticPosition(index, 4, 80, -130),
-  database: (index: number) => calculateStaticPosition(index, 4, 60, -130),
-};
-
 const iconGroups = {
   frontend: [
-    { Icon: FaReact, label: 'React', color: '#61dafb' },
-    { Icon: SiTypescript, label: 'TypeScript', color: '#4285F4' },
+    {
+      Icon: FaReact,
+      label: 'React',
+      color: '#61dafb',
+      position: new THREE.Vector3(200, 0, -50),
+    },
+    {
+      Icon: SiTypescript,
+      label: 'TypeScript',
+      color: '#4285F4',
+      position: new THREE.Vector3(190, 50, -50),
+    },
     {},
-    { Icon: IoLogoJavascript, label: 'Javascript', color: '#FFD95F' },
-    { Icon: FaPython, label: 'Python', color: '#3D8D7A' },
+    {
+      Icon: IoLogoJavascript,
+      label: 'Javascript',
+      color: '#FFD95F',
+      position: new THREE.Vector3(140, -50, -50),
+    },
+    {
+      Icon: FaPython,
+      label: 'Python',
+      color: '#3D8D7A',
+      position: new THREE.Vector3(-200, 0, -50),
+    },
   ],
   backend: [
-    { Icon: FaNode, label: 'Node.js', color: '#A4B465' },
-    { Icon: RiNextjsFill, label: 'Next.js', color: '#ffffff' },
+    {
+      Icon: FaNode,
+      label: 'Node.js',
+      color: '#A4B465',
+      position: new THREE.Vector3(0, 100, -50),
+    },
+    {
+      Icon: RiNextjsFill,
+      label: 'Next.js',
+      color: '#ffffff',
+      position: new THREE.Vector3(120, 100, -50),
+    },
     {},
-    { Icon: SiNestjs, label: 'Nest.js', color: '#D70654' },
-    { Icon: SiExpress, label: 'Express', color: '#27445D' },
+    {
+      Icon: SiNestjs,
+      label: 'Nest.js',
+      color: '#D70654',
+      position: new THREE.Vector3(-127, 70, -50),
+    },
+    {
+      Icon: SiExpress,
+      label: 'Express',
+      color: '#27445D',
+      position: new THREE.Vector3(-200, 60, -50),
+    },
   ],
   cloud: [
-    { Icon: SiGooglecloud, label: 'GCP', color: '#4285F4' },
-    { Icon: FaAws, label: 'AWS', color: '#FBA518' },
+    {
+      Icon: SiGooglecloud,
+      label: 'GCP',
+      color: '#4285F4',
+      position: new THREE.Vector3(-50, 40, -50),
+    },
+    {
+      Icon: FaAws,
+      label: 'AWS',
+      color: '#FBA518',
+      position: new THREE.Vector3(50, 40, -50),
+    },
     {},
-    { Icon: SiTerraform, label: 'Terraform', color: '#493D9E' },
-    { Icon: SiDocker, label: 'Docker', color: '#2973B2' },
+    {
+      Icon: SiTerraform,
+      label: 'Terraform',
+      color: '#493D9E',
+      position: new THREE.Vector3(-100, 0, -50),
+    },
+    {
+      Icon: SiDocker,
+      label: 'Docker',
+      color: '#2973B2',
+      position: new THREE.Vector3(-120, -50, -50),
+    },
   ],
   database: [
-    { Icon: SiPostgresql, label: 'PostgreSQL', color: '#155E95' },
-    { Icon: SiSupabase, label: 'Supabase', color: '#72BF78' },
+    {
+      Icon: SiPostgresql,
+      label: 'PostgreSQL',
+      color: '#155E95',
+      position: new THREE.Vector3(-200, -70, -50),
+    },
+    {
+      Icon: SiSupabase,
+      label: 'Supabase',
+      color: '#72BF78',
+      position: new THREE.Vector3(50, -30, -50),
+    },
     {},
-    { Icon: SiGooglebigquery, label: 'BigQuery', color: '#615EFC' },
-    { Icon: IoLogoFirebase, label: 'Firebase', color: '#DF6D14' },
+    {
+      Icon: SiGooglebigquery,
+      label: 'BigQuery',
+      color: '#615EFC',
+      position: new THREE.Vector3(200, -70, -50),
+    },
+    {
+      Icon: IoLogoFirebase,
+      label: 'Firebase',
+      color: '#DF6D14',
+      position: new THREE.Vector3(120, 30, -50),
+    },
   ],
 };
 
@@ -106,20 +166,46 @@ function TechIcon({
   position,
   Icon,
   label,
+  ref,
 }: {
   position: [number, number, number];
   Icon: typeof FaReact | undefined;
   label: string | undefined;
   Iconcolor: string | undefined;
+  ref: React.RefObject<HTMLDivElement | null>;
 }) {
+  const iconRef = useRef<HTMLDivElement>(null);
+  const labelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const tl = gsap.timeline();
+
+    tl.to([iconRef.current, labelRef.current], {
+      opacity: 0,
+      duration: 0,
+    }).to(
+      [iconRef.current, labelRef.current],
+      {
+        opacity: 1,
+        duration: 1,
+        delay: 4, // Start after camera animation
+        ease: 'power2.inOut',
+        stagger: 0.1,
+      },
+      '-=1.0',
+    );
+
+    return () => {
+      tl.kill();
+    };
+  }, []);
+
   if (!Icon) return null;
-  // position =
-  //   Math.random() > 0.7 ? position : [-position[0], position[1], position[2]];
   return (
     <Float speed={2} rotationIntensity={0.1} floatIntensity={0.1}>
       <group position={position}>
         <Html transform distanceFactor={15}>
-          <div>
+          <div ref={iconRef} style={{ opacity: 0 }}>
             <Icon size={400} color="#FFFFFF" />
           </div>
         </Html>
@@ -127,18 +213,20 @@ function TechIcon({
           transform
           position={[0, -15, 0]}
           center
-          distanceFactor={80} // Reduced from 15 to make text larger
+          distanceFactor={80}
+          ref={ref}
         >
           <div
+            ref={labelRef}
             style={{
+              opacity: 0,
               color: '#ffffff',
-              fontSize: '24px', // Increased from 14px
+              fontSize: '24px',
               fontWeight: 'bold',
               padding: '10px 20px',
               background: 'rgba(0,0,0,0.7)',
               borderRadius: '8px',
               border: `1px solid #ffffff`,
-              // textShadow: '0 0 5px rgba(0,0,0,0.5)',
             }}
           >
             {label}
@@ -163,6 +251,8 @@ export function KnowledgeScene(props: JSX.IntrinsicElements['group']) {
   const [isAnimating, setIsAnimating] = useState(true);
   const startPosition = new THREE.Vector3(0, 0, 50); // Start from far behind
   const endPosition = new THREE.Vector3(0, 0, 12); // Final position
+  const frontRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     // Disable controls during animation
     if (controls) {
@@ -202,6 +292,11 @@ export function KnowledgeScene(props: JSX.IntrinsicElements['group']) {
       ease: 'power2.inOut',
       onUpdate: () => {
         camera.lookAt(0, 0, 0);
+      },
+      onStart: () => {
+        if (frontRef.current) {
+          gsap.set([frontRef.current.children], { opacity: 0 });
+        }
       },
     });
 
@@ -283,53 +378,57 @@ export function KnowledgeScene(props: JSX.IntrinsicElements['group']) {
             scale={42.0}
           ></mesh>
           {/* Frontend Circle - Outer */}
-          {iconGroups.frontend.map((icon, index) =>
+          {iconGroups.frontend.map((icon) =>
             icon.Icon ? (
               <TechIcon
                 key={icon.label}
-                position={iconPositions.frontend(index)}
+                position={[icon.position.x, icon.position.y, icon.position.z]}
                 Icon={icon.Icon}
                 label={icon.label}
                 Iconcolor={icon.color}
+                ref={frontRef}
               />
             ) : null,
           )}
 
           {/* Backend Row */}
-          {iconGroups.backend.map((icon, index) =>
+          {iconGroups.backend.map((icon) =>
             icon.Icon ? (
               <TechIcon
                 key={icon.label}
-                position={iconPositions.backend(index)}
+                position={[icon.position.x, icon.position.y, icon.position.z]}
                 Icon={icon.Icon}
                 label={icon.label}
                 Iconcolor={icon.color}
+                ref={frontRef}
               />
             ) : null,
           )}
 
           {/* Cloud Row */}
-          {iconGroups.cloud.map((icon, index) =>
+          {iconGroups.cloud.map((icon) =>
             icon.Icon ? (
               <TechIcon
                 key={icon.label}
-                position={iconPositions.cloud(index)}
+                position={[icon.position.x, icon.position.y, icon.position.z]}
                 Icon={icon.Icon}
                 label={icon.label}
                 Iconcolor={icon.color}
+                ref={frontRef}
               />
             ) : null,
           )}
 
           {/* Database Row */}
-          {iconGroups.database.map((icon, index) =>
+          {iconGroups.database.map((icon) =>
             icon.Icon ? (
               <TechIcon
                 key={icon.label}
-                position={iconPositions.database(index)}
+                position={[icon.position.x, icon.position.y, icon.position.z]}
                 Icon={icon.Icon}
                 label={icon.label}
                 Iconcolor={icon.color}
+                ref={frontRef}
               />
             ) : null,
           )}
