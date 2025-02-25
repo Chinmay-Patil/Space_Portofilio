@@ -9,6 +9,8 @@ import { ProjectScene } from './scenes/projectsScene';
 import { ConatactScene } from './scenes/contactScene';
 import { Loader } from './components/loader';
 import { useLoading } from './components/loadingContext';
+// import { AudioProvider } from './components/audio';
+// import { AudioControl } from './components/auditoControl';
 
 function Scene() {
   const { loadingShown, setLoadingShown } = useLoading();
@@ -23,7 +25,7 @@ function Scene() {
   return (
     <>
       <color attach="background" args={['#000000']} />
-
+      {/* <AudioControl /> */}
       <Stars
         radius={500}
         depth={100}
@@ -58,6 +60,7 @@ function Scene() {
 
 export default function App() {
   return (
+    // <AudioProvider>
     <Router basename="/Space_Portofilio">
       <div style={{ width: '100vw', height: '100vh', overflow: 'hidden' }}>
         <Canvas>
@@ -65,5 +68,6 @@ export default function App() {
         </Canvas>
       </div>
     </Router>
+    // </AudioProvider>
   );
 }
