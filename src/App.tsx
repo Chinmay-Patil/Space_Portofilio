@@ -68,7 +68,7 @@ function Scene() {
 
 export default function App() {
   return (
-    <Router>
+    <Router basename="/Space_Portofilio">
       <div style={{ width: '100vw', height: '100vh', overflow: 'hidden' }}>
         <Canvas>
           <Scene />
