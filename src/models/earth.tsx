@@ -319,8 +319,6 @@ export function Model({ setTransitioning, setTransitionSpeed, ...props }: any) {
         enabled={orbitEnabled}
         maxDistance={20}
         minDistance={5}
-        autoRotate={true}
-        rotateSpeed={0.005}
       />
       <group {...props} dispose={null}>
         <group scale={0.01} position={[0, -3, 0]}>
