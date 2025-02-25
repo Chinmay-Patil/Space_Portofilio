@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   base: '/Space_Portofilio/',
   build: {
+    
     assetsDir: 'assets',  // Customize the asset directory
     //  minify: "terser", // Alternative minifier that may handle eval better
      terserOptions: {
