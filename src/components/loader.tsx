@@ -59,7 +59,7 @@ function AnimatedText({
         color="white"
         anchorX="center"
         anchorY="middle"
-        font="/fonts/SpaceMono-Bold.ttf"
+        font="./fonts/SpaceMono-Bold.ttf"
         material-transparent
         material-opacity={0}
       >
