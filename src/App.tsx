@@ -51,7 +51,7 @@ function Scene() {
       ) : (
         <Suspense fallback={<Loader />}>
           <Routes>
-            <Route path="/Space_Portofilio" element={<Model />} />
+            <Route path="/" element={<Model />} />
             <Route path="/about" element={<AboutScene />} />
             <Route path="/knowledge" element={<KnowledgeScene />} />
             <Route path="/projects" element={<ProjectScene />} />
@@ -68,7 +68,7 @@ function Scene() {
 
 export default function App() {
   return (
-    <Router>
+    <Router basename="/Space_Portfolio">
       <div style={{ width: '100vw', height: '100vh', overflow: 'hidden' }}>
         <Canvas>
           <Scene />
