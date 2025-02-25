@@ -170,7 +170,7 @@ export function AboutScene(props: JSX.IntrinsicElements['group']) {
             color="#ffffff"
             anchorX="center"
             anchorY="middle"
-            font="/fonts/SpaceMono-Bold.ttf"
+            font="./fonts/SpaceMono-Bold.ttf"
             material-toneMapped={false}
           >
             Hey, I'm Chinmay Patil
@@ -182,7 +182,7 @@ export function AboutScene(props: JSX.IntrinsicElements['group']) {
               fontSize={6}
               anchorX="center"
               anchorY="middle"
-              font="/fonts/SpaceMono-Regular.ttf"
+              font="./fonts/SpaceMono-Regular.ttf"
             >
               A software engineer who loves building cool things, whether it’s
               in the digital world or the real one.{'\n'}
