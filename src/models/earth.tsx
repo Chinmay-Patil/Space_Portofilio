@@ -589,4 +589,4 @@ export function Model({ setTransitioning, setTransitionSpeed, ...props }: any) {
   );
 }
 
-useGLTF.preload('/models/space_boi.glb');
+useGLTF.preload('./models/space_boi.glb');

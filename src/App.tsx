@@ -1,6 +1,6 @@
 import { Canvas } from '@react-three/fiber';
 import { Model } from './models/earth';
-import { Stars } from '@react-three/drei';
+import { Stars, useGLTF } from '@react-three/drei';
 import {
   BrowserRouter as Router,
   Routes,
@@ -18,6 +18,12 @@ function Scene() {
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
+    console.log('normal', useGLTF('/models/spaceship.glb'));
+    console.log('dot', useGLTF('./models/spaceship.glb'));
+    console.log(
+      'href',
+      useGLTF(new URL('./models/spaceship.glb', import.meta.url).href),
+    );
     // Only apply loading state for root route
     if (location.pathname === '/') {
       setIsLoading(true);

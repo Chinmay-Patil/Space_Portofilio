@@ -233,4 +233,4 @@ export function Model(props: JSX.IntrinsicElements['group']) {
   );
 }
 
-useGLTF.preload('/models/spaceship.glb');
+useGLTF.preload('./models/spaceship.glb');

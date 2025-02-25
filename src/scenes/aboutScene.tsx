@@ -253,4 +253,4 @@ export function AboutScene(props: JSX.IntrinsicElements['group']) {
   );
 }
 
-useGLTF.preload('/models/space_boi.glb');
+useGLTF.preload('./models/space_boi.glb');
