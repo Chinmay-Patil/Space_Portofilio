@@ -2,14 +2,25 @@ import { Canvas } from '@react-three/fiber';
 import { Model } from './models/earth';
 import { Stars } from '@react-three/drei';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { AboutScene } from './scenes/aboutScene';
 import { KnowledgeScene } from './scenes/knowledgeScene';
 import { ProjectScene } from './scenes/projectsScene';
 import { ConatactScene } from './scenes/contactScene';
 import { Loader } from './components/loader';
+import { useLoading } from './components/loadingContext';
+import PageLayout from './components/pageOutlet';
 
 function Scene() {
+  const { loadingShown, setLoadingShown } = useLoading();
+  const [showLoading, setShowLoading] = useState(!loadingShown);
+
+  useEffect(() => {
+    if (!loadingShown) {
+      setLoadingShown(true);
+    }
+  }, [loadingShown, setLoadingShown]);
+
   return (
     <>
       <color attach="background" args={['#000000']} />
@@ -24,18 +35,26 @@ function Scene() {
         speed={1}
       />
 
-      <Suspense fallback={<Loader />}>
-        <Routes>
-          <Route path="/" element={<Model />} />
-          <Route path="/about" element={<AboutScene />} />
-          <Route path="/knowledge" element={<KnowledgeScene />} />
-          <Route path="/projects" element={<ProjectScene />} />
-          <Route path="/contact" element={<ConatactScene />} />
-        </Routes>
-      </Suspense>
+      {showLoading ? (
+        <Loader onFinish={() => setShowLoading(false)} />
+      ) : (
+        <>
+          <Suspense fallback={<Loader />}>
+            <Routes>
+              {/* <Route element={<PageLayout />}> */}
+              <Route path="/" element={<Model />} />
+              <Route path="/about" element={<AboutScene />} />
+              <Route path="/knowledge" element={<KnowledgeScene />} />
+              <Route path="/projects" element={<ProjectScene />} />
+              <Route path="/contact" element={<ConatactScene />} />
+              {/* </Route> */}
+            </Routes>
+          </Suspense>
 
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[5, 5, 5]} intensity={1} />
+          <ambientLight intensity={0.5} />
+          <directionalLight position={[5, 5, 5]} intensity={1} />
+        </>
+      )}
     </>
   );
 }

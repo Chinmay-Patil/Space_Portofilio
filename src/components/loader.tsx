@@ -1,8 +1,12 @@
 import { Text } from '@react-three/drei';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import gsap from 'gsap';
+
+interface LoaderProps {
+  onFinish?: () => void;
+}
 
 function AnimatedText({
   text,
@@ -97,7 +101,20 @@ function CameraAnimation() {
   return null;
 }
 
-export function Loader() {
+export const Loader: React.FC<LoaderProps> = ({ onFinish }) => {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setVisible(false);
+      onFinish?.();
+    }, 16000); // 2 seconds animation
+
+    return () => clearTimeout(timeout);
+  }, [onFinish]);
+
+  if (!visible) return null;
+
   return (
     <>
       <CameraAnimation />
@@ -130,4 +147,4 @@ export function Loader() {
       </group>
     </>
   );
-}
+};
