@@ -1,4 +1,4 @@
-import { Float, useGLTF, Html } from '@react-three/drei';
+import { Float, useGLTF, Html, OrbitControls } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
@@ -8,6 +8,7 @@ import { Model } from '../models/spaceship';
 import { useNavigate } from 'react-router-dom';
 import { FaGithub, FaInstagram, FaLinkedin, FaReact } from 'react-icons/fa';
 import { SiGmail } from 'react-icons/si';
+import { ContactForm } from '../components/contactForm';
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -160,6 +161,7 @@ export function ConatactScene(props: JSX.IntrinsicElements['group']) {
   const { domElement } = useThree((state) => state.gl);
   const navigate = useNavigate();
   const IconRef = useRef<HTMLDivElement>(null);
+  const groupRef = useRef<THREE.Group>(null);
   useEffect(() => {
     // Disable controls during animation
     if (controls) {
@@ -228,6 +230,15 @@ export function ConatactScene(props: JSX.IntrinsicElements['group']) {
 
   return (
     <>
+      <OrbitControls
+        enabled={!isAnimating}
+        enableZoom={true}
+        enablePan={true}
+        minPolarAngle={Math.PI / 2}
+        maxPolarAngle={Math.PI / 2}
+        minDistance={2}
+        maxDistance={20}
+      />
       <Float speed={2} rotationIntensity={0.1} floatIntensity={0.1}>
         <Model
           position={[-15, 6.5, -1]}
@@ -282,6 +293,12 @@ export function ConatactScene(props: JSX.IntrinsicElements['group']) {
             ref={IconRef}
           />
         ))}
+      </group>
+
+      <group>
+        <Float speed={2} rotationIntensity={0.1} floatIntensity={0.1}>
+          <ContactForm />
+        </Float>
       </group>
 
       <group {...props} dispose={null}>
