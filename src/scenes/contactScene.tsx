@@ -44,13 +44,14 @@ function ContactIcon({
   position,
   Icon,
   label,
-  ref,
+  // Iconcolor,
+  onClick,
 }: {
   position: [number, number, number];
   Icon: typeof FaReact | undefined;
   label: string | undefined;
   Iconcolor: string | undefined;
-  ref: React.RefObject<HTMLDivElement | null>;
+  onClick?: () => void;
 }) {
   const iconRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLDivElement>(null);
@@ -66,7 +67,7 @@ function ContactIcon({
       {
         opacity: 1,
         duration: 1,
-        delay: 4, // Start after camera animation
+        delay: 4,
         ease: 'power2.inOut',
         stagger: 0.1,
       },
@@ -79,21 +80,20 @@ function ContactIcon({
   }, []);
 
   if (!Icon) return null;
+
   return (
     <Float speed={2} rotationIntensity={0.1} floatIntensity={0.1}>
       <group position={position}>
         <Html transform distanceFactor={15}>
-          <div ref={iconRef} style={{ opacity: 0 }}>
+          <div
+            ref={iconRef}
+            style={{ opacity: 0, cursor: 'pointer' }}
+            onClick={onClick}
+          >
             <Icon size={400} color="#FFFFFF" />
           </div>
         </Html>
-        <Html
-          transform
-          position={[0, -15, 0]}
-          center
-          distanceFactor={80}
-          ref={ref}
-        >
+        <Html transform position={[0, -15, 0]} center distanceFactor={80}>
           <div
             ref={labelRef}
             style={{
@@ -105,7 +105,9 @@ function ContactIcon({
               background: 'rgba(0,0,0,0.7)',
               borderRadius: '8px',
               border: `1px solid #ffffff`,
+              cursor: 'pointer',
             }}
+            onClick={onClick}
           >
             {label}
           </div>
@@ -120,29 +122,31 @@ const ContactIcons = [
     position: new THREE.Vector3(-200, 10, -150),
     Icon: FaLinkedin,
     label: 'LinkedIn',
-    onclick: () => {},
+    onclick: () =>
+      window.open('https://www.linkedin.com/your-profile', '_blank'),
     color: '#0077B5',
   },
   {
     position: new THREE.Vector3(-170, 80, -150),
     Icon: SiGmail,
     label: 'Gmail',
-    onclick: () => {},
-    color: '#0077B5',
+    onclick: () => window.open('mailto:your.email@gmail.com'),
+    color: '#EA4335',
   },
   {
     position: new THREE.Vector3(-70, 60, -150),
     Icon: FaInstagram,
     label: 'Instagram',
-    onclick: () => {},
-    color: '#0077B5',
+    onclick: () =>
+      window.open('https://www.instagram.com/your-profile', '_blank'),
+    color: '#E4405F',
   },
   {
     position: new THREE.Vector3(-80, -30, -150),
     Icon: FaGithub,
     label: 'GitHub',
-    onclick: () => {},
-    color: '#0077B5',
+    onclick: () => window.open('https://github.com/your-profile', '_blank'),
+    color: '#181717',
   },
 ];
 
@@ -160,7 +164,7 @@ export function ConatactScene(props: JSX.IntrinsicElements['group']) {
   const [_, setHovered] = useState(false);
   const { domElement } = useThree((state) => state.gl);
   const navigate = useNavigate();
-  const IconRef = useRef<HTMLDivElement>(null);
+  // const IconRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     // Disable controls during animation
     if (controls) {
@@ -289,7 +293,7 @@ export function ConatactScene(props: JSX.IntrinsicElements['group']) {
             Icon={icon.Icon}
             label={icon.label}
             Iconcolor={icon.color}
-            ref={IconRef}
+            onClick={icon.onclick}
           />
         ))}
       </group>
