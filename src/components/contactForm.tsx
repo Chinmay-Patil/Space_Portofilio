@@ -57,13 +57,7 @@ export function ContactForm() {
 
   useEffect(() => {
     const checkRefs = () => {
-      const elements = [
-        inputRefs.email.current,
-        inputRefs.name.current,
-        inputRefs.message.current,
-        inputRefs.submit.current,
-        inputRefs.title.current,
-      ];
+      const elements = [formRef.current, inputRefs.title.current];
 
       if (!elements.some((el) => !el)) {
         setIsReady(true);
@@ -80,22 +74,8 @@ export function ContactForm() {
   useEffect(() => {
     if (!isReady) return;
 
-    const elements = [
-      inputRefs.title.current,
-      inputRefs.name.current,
-      inputRefs.email.current,
-      inputRefs.message.current,
-      inputRefs.submit.current,
-    ];
-
-    // Set initial states
-    elements.forEach((el) => {
-      if (el instanceof HTMLElement) {
-        gsap.set(el, {
-          opacity: 0,
-          y: 20,
-        });
-      }
+    gsap.set([formRef.current, inputRefs.title.current], {
+      opacity: 0,
     });
 
     // Create and start animation timeline
@@ -103,20 +83,10 @@ export function ContactForm() {
       delay: 1,
     });
 
-    // Animate elements
-    elements.forEach((el, index) => {
-      if (el instanceof HTMLElement) {
-        tl.to(
-          el,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: 'power2.out',
-          },
-          index * 0.1,
-        );
-      }
+    tl.to([formRef.current, inputRefs.title.current], {
+      opacity: 1,
+      duration: 1,
+      ease: 'power2.out',
     });
 
     return () => {
@@ -148,6 +118,7 @@ export function ContactForm() {
             flexDirection: 'column',
             gap: '20px',
             width: '600px',
+            opacity: 0,
           }}
         >
           <input
