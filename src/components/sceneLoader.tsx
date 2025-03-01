@@ -1,23 +1,27 @@
-import { Html, useProgress } from '@react-three/drei';
+import { Stars } from '@react-three/drei';
+import { useFrame } from '@react-three/fiber';
+import { useRef } from 'react';
+import * as THREE from 'three';
 
 export function SceneLoader() {
-  const { progress } = useProgress();
+  const starsRef = useRef<THREE.Points>(null);
+
+  useFrame(() => {
+    if (starsRef.current) {
+      starsRef.current.rotation.y += 0.0003;
+    }
+  });
+
   return (
-    <Html center>
-      <div
-        style={{
-          color: 'white',
-          fontSize: '1.2em',
-          fontFamily: 'SpaceMono-Bold',
-          background: 'rgba(0,0,0,0.7)',
-          padding: '20px',
-          borderRadius: '10px',
-          textAlign: 'center',
-        }}
-      >
-        <div>Loading Scene...</div>
-        <div>{progress.toFixed(0)}%</div>
-      </div>
-    </Html>
+    <Stars
+      ref={starsRef}
+      radius={300}
+      depth={60}
+      count={5000}
+      factor={6}
+      saturation={0}
+      fade={true}
+      speed={1}
+    />
   );
 }

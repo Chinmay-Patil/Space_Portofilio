@@ -44,7 +44,7 @@ function ContactIcon({
   position,
   Icon,
   label,
-  // Iconcolor,
+  Iconcolor,
   onClick,
 }: {
   position: [number, number, number];
@@ -55,27 +55,31 @@ function ContactIcon({
 }) {
   const iconRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const tl = gsap.timeline();
+    if (!iconRef.current || !labelRef.current) return;
 
-    tl.to([iconRef.current, labelRef.current], {
+    // Set initial state
+    gsap.set([iconRef.current, labelRef.current], {
       opacity: 0,
-      duration: 0,
-    }).to(
-      [iconRef.current, labelRef.current],
-      {
+    });
+
+    // Delay the animation start
+    const timer = setTimeout(() => {
+      const tl = gsap.timeline();
+
+      tl.to([iconRef.current, labelRef.current], {
         opacity: 1,
         duration: 1,
-        delay: 4,
-        ease: 'power2.inOut',
         stagger: 0.1,
-      },
-      '-=1.0',
-    );
+        ease: 'power2.inOut',
+        onComplete: () => setIsVisible(true),
+      });
+    }, 4000); // 4 seconds delay
 
     return () => {
-      tl.kill();
+      clearTimeout(timer);
     };
   }, []);
 
@@ -87,10 +91,15 @@ function ContactIcon({
         <Html transform distanceFactor={15}>
           <div
             ref={iconRef}
-            style={{ opacity: 0, cursor: 'pointer' }}
+            style={{
+              opacity: 0,
+              cursor: 'pointer',
+              transform: `scale(${isVisible ? 1 : 0.95})`,
+              transition: 'transform 0.3s ease',
+            }}
             onClick={onClick}
           >
-            <Icon size={400} color="#FFFFFF" />
+            <Icon size={400} color={'#FFFFFF'} />
           </div>
         </Html>
         <Html transform position={[0, -15, 0]} center distanceFactor={80}>
@@ -106,6 +115,8 @@ function ContactIcon({
               borderRadius: '8px',
               border: `1px solid #ffffff`,
               cursor: 'pointer',
+              transform: `scale(${isVisible ? 1 : 0.95})`,
+              transition: 'all 0.3s ease',
             }}
             onClick={onClick}
           >
@@ -116,7 +127,6 @@ function ContactIcon({
     </Float>
   );
 }
-
 const ContactIcons = [
   {
     position: new THREE.Vector3(-200, 10, -150),
@@ -158,26 +168,40 @@ export function ConatactScene(props: JSX.IntrinsicElements['group']) {
 
   const [isAnimating, setIsAnimating] = useState(true);
   const startPosition = new THREE.Vector3(0, 0, 50); // Start from far behind
-  const endPosition = new THREE.Vector3(0, 0, 9); // Final position\
+  const endPosition = new THREE.Vector3(0, 0, 9); // Final position
+  const [isInitialized, setIsInitialized] = useState(false);
   const innerBodyRef = useRef<THREE.Mesh>(null);
   const outerBodyRef = useRef<THREE.Mesh>(null);
   const [_, setHovered] = useState(false);
   const { domElement } = useThree((state) => state.gl);
   const navigate = useNavigate();
   // const IconRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
+    if (!innerBodyRef.current || !outerBodyRef.current) return;
+
+    // Set initial positions safely
+    innerBodyRef.current.position.y = 200;
+    outerBodyRef.current.position.y = 200;
+    camera.position.copy(startPosition);
+    camera.lookAt(0, 0, 0);
+
+    setIsInitialized(true);
+  }, [innerBodyRef.current, outerBodyRef.current]);
+
+  useEffect(() => {
+    // Wait for refs to be initialized
+    if (!isInitialized || !innerBodyRef.current || !outerBodyRef.current)
+      return;
     // Disable controls during animation
     if (controls) {
       //@ts-ignore
       controls.enabled = !isAnimating;
     }
 
-    // Set initial camera position
-    camera.position.copy(startPosition);
-    camera.lookAt(0, 0, 0);
-
     // Create GSAP timeline
     const tl = gsap.timeline({
+      delay: 0.1,
       onComplete: () => {
         setIsAnimating(false);
         if (controls) {
@@ -207,18 +231,14 @@ export function ConatactScene(props: JSX.IntrinsicElements['group']) {
       },
     });
 
-    tl.fromTo(
-      //@ts-ignore
+    tl.to(
       [innerBodyRef.current.position, outerBodyRef.current.position],
-      {
-        y: 200,
-      },
       {
         y: 0,
         duration: 1,
         ease: 'power2.out',
       },
-      '-=1.0', // Start slightly before camera animation ends
+      '-=1.0',
     );
 
     return () => {
@@ -229,7 +249,7 @@ export function ConatactScene(props: JSX.IntrinsicElements['group']) {
         controls.enabled = true;
       }
     };
-  }, [camera, controls]);
+  }, [camera, controls, isInitialized]);
 
   return (
     <>
@@ -244,7 +264,7 @@ export function ConatactScene(props: JSX.IntrinsicElements['group']) {
       />
       <Float speed={2} rotationIntensity={0.1} floatIntensity={0.1}>
         <Model
-          position={[-15, 6.5, -1]}
+          position={[-15, 6.5, -2]}
           onClick={() => navigate('/')}
           onPointerOver={() => {
             domElement.style.cursor = 'pointer';

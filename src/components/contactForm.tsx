@@ -56,9 +56,19 @@ export function ContactForm() {
   };
 
   useEffect(() => {
-    const tl = gsap.timeline();
+    // Wait for all refs to be initialized
+    const elements = [
+      inputRefs.email.current,
+      inputRefs.name.current,
+      inputRefs.message.current,
+      inputRefs.submit.current,
+      inputRefs.title.current,
+    ];
 
-    tl.to(
+    if (elements.some((el) => !el)) return;
+
+    // Set initial states
+    gsap.set(
       [
         inputRefs.email.current,
         inputRefs.name.current,
@@ -67,25 +77,26 @@ export function ContactForm() {
       ],
       {
         opacity: 0,
-        duration: 0,
       },
-    )
-      .to([inputRefs.title.current], {
-        duration: 0,
-        fillOpacity: 0,
-      })
-      .to(
-        [inputRefs.title.current],
-        {
-          fillOpacity: 1,
-          duration: 1,
-          delay: 2, // Start after camera animation
-          ease: 'power2.inOut',
-          stagger: 0.1,
-        },
-        '-=1.0',
-      )
-      .to(
+    );
+
+    gsap.set(inputRefs.title.current, {
+      opacity: 0,
+    });
+
+    // Delay animation start
+    const timer = setTimeout(() => {
+      const tl = gsap.timeline();
+
+      // Animate title
+      tl.to(inputRefs.title.current, {
+        opacity: 1,
+        duration: 1,
+        ease: 'power2.inOut',
+      });
+
+      // Animate form elements
+      tl.to(
         [
           inputRefs.email.current,
           inputRefs.name.current,
@@ -95,15 +106,15 @@ export function ContactForm() {
         {
           opacity: 1,
           duration: 1,
-          delay: 1, // Start after camera animation
-          ease: 'power2.inOut',
           stagger: 0.1,
+          ease: 'power2.inOut',
         },
-        '-=1.0',
+        '-=0.5',
       );
+    }, 2000); // 2 seconds delay
 
     return () => {
-      tl.kill();
+      clearTimeout(timer);
     };
   }, []);
 
