@@ -55,32 +55,44 @@ function ContactIcon({
   const iconRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const animationRef = useRef<gsap.core.Timeline>(null);
 
   useEffect(() => {
-    if (!iconRef.current || !labelRef.current) return;
+    // Wait for next frame to ensure refs are populated
+    const frameId = requestAnimationFrame(() => {
+      if (!iconRef.current || !labelRef.current) return;
 
-    // Set initial state
-    gsap.set([iconRef.current, labelRef.current], {
-      opacity: 0,
-    });
+      // Create and store timeline
+      animationRef.current = gsap.timeline({
+        paused: true,
+        onComplete: () => setIsVisible(true),
+      });
 
-    // Delay the animation start
-    const timer = setTimeout(() => {
-      const tl = gsap.timeline();
+      // Set initial state
+      gsap.set([iconRef.current, labelRef.current], {
+        opacity: 0,
+        scale: 0.95,
+      });
 
-      tl.to([iconRef.current, labelRef.current], {
+      // Build animation
+      animationRef.current.to([iconRef.current, labelRef.current], {
         opacity: 1,
+        scale: 1,
         duration: 1,
         stagger: 0.1,
         ease: 'power2.inOut',
-        onComplete: () => setIsVisible(true),
       });
-    }, 4000); // 4 seconds delay
 
+      // Start after delay
+      setTimeout(() => animationRef.current?.play(), 3000);
+    });
+
+    // Cleanup
     return () => {
-      clearTimeout(timer);
+      cancelAnimationFrame(frameId);
+      animationRef.current?.kill();
     };
-  }, []);
+  }, []); // Run once on mount
 
   if (!Icon) return null;
 
@@ -263,7 +275,7 @@ export function ConatactScene(props: JSX.IntrinsicElements['group']) {
       />
       <Float speed={2} rotationIntensity={0.1} floatIntensity={0.1}>
         <Model
-          position={[-15, 6.5, -2]}
+          position={[-15, 6.5, -1]}
           onClick={() => navigate('/')}
           onPointerOver={() => {
             domElement.style.cursor = 'pointer';

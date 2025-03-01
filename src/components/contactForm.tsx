@@ -56,65 +56,60 @@ export function ContactForm() {
   };
 
   useEffect(() => {
-    // Wait for all refs to be initialized
-    const elements = [
+    const formElements = [
       inputRefs.email.current,
       inputRefs.name.current,
       inputRefs.message.current,
       inputRefs.submit.current,
-      inputRefs.title.current,
     ];
 
-    if (elements.some((el) => !el)) return;
+    // Check if all refs are available
+    if (formElements.some((el) => !el) || !inputRefs.title.current) return;
 
-    // Set initial states
-    gsap.set(
-      [
-        inputRefs.email.current,
-        inputRefs.name.current,
-        inputRefs.message.current,
-        inputRefs.submit.current,
-      ],
-      {
-        opacity: 0,
-      },
-    );
+    // Set initial states for form elements
+    formElements.forEach((element) => {
+      if (element instanceof HTMLElement) {
+        gsap.set(element, {
+          opacity: 0,
+          y: 20,
+        });
+      }
+    });
 
-    gsap.set(inputRefs.title.current, {
+    // Set initial state for title
+    //@ts-ignore
+    gsap.set(inputRefs.title.current.material, {
       opacity: 0,
     });
 
-    // Delay animation start
-    const timer = setTimeout(() => {
-      const tl = gsap.timeline();
+    // Create and start animation timeline
+    const tl = gsap.timeline({
+      delay: 2,
+    });
 
-      // Animate title
-      tl.to(inputRefs.title.current, {
+    // Animate title
+    //@ts-ignore
+    tl.to(inputRefs.title.current.material, {
+      opacity: 1,
+      duration: 1,
+      ease: 'power2.inOut',
+    });
+
+    // Animate form elements
+    tl.to(
+      formElements,
+      {
         opacity: 1,
-        duration: 1,
-        ease: 'power2.inOut',
-      });
-
-      // Animate form elements
-      tl.to(
-        [
-          inputRefs.email.current,
-          inputRefs.name.current,
-          inputRefs.message.current,
-          inputRefs.submit.current,
-        ],
-        {
-          opacity: 1,
-          duration: 1,
-          stagger: 0.1,
-          ease: 'power2.inOut',
-        },
-        '-=0.5',
-      );
-    }, 2000); // 2 seconds delay
+        y: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: 'power2.out',
+      },
+      '-=0.5',
+    );
 
     return () => {
-      clearTimeout(timer);
+      tl.kill();
     };
   }, []);
 
