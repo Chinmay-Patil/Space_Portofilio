@@ -44,7 +44,6 @@ function ContactIcon({
   position,
   Icon,
   label,
-  Iconcolor,
   onClick,
 }: {
   position: [number, number, number];
