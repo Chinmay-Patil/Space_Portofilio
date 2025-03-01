@@ -1,13 +1,13 @@
-import { Html, Text } from '@react-three/drei';
+import { Html } from '@react-three/drei';
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
-import * as THREE from 'three';
 import emailjs from '@emailjs/browser';
 import toast from 'react-hot-toast';
 
 export function ContactForm() {
   const formRef = useRef<HTMLFormElement>(null);
   const [loading, setLoading] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -20,7 +20,7 @@ export function ContactForm() {
     email: useRef<HTMLInputElement>(null),
     message: useRef<HTMLTextAreaElement>(null),
     submit: useRef<HTMLButtonElement>(null),
-    title: useRef<THREE.Group>(null),
+    title: useRef<HTMLHeadingElement>(null),
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,76 +56,90 @@ export function ContactForm() {
   };
 
   useEffect(() => {
-    const formElements = [
-      inputRefs.email.current,
+    const checkRefs = () => {
+      const elements = [
+        inputRefs.email.current,
+        inputRefs.name.current,
+        inputRefs.message.current,
+        inputRefs.submit.current,
+        inputRefs.title.current,
+      ];
+
+      if (!elements.some((el) => !el)) {
+        setIsReady(true);
+      }
+    };
+
+    // Check refs every 100ms until they're all ready
+    const interval = setInterval(checkRefs, 100);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Handle animations once refs are ready
+  useEffect(() => {
+    if (!isReady) return;
+
+    const elements = [
+      inputRefs.title.current,
       inputRefs.name.current,
+      inputRefs.email.current,
       inputRefs.message.current,
       inputRefs.submit.current,
     ];
 
-    // Check if all refs are available
-    if (formElements.some((el) => !el) || !inputRefs.title.current) return;
-
-    // Set initial states for form elements
-    formElements.forEach((element) => {
-      if (element instanceof HTMLElement) {
-        gsap.set(element, {
+    // Set initial states
+    elements.forEach((el) => {
+      if (el instanceof HTMLElement) {
+        gsap.set(el, {
           opacity: 0,
           y: 20,
         });
       }
     });
 
-    // Set initial state for title
-    //@ts-ignore
-    gsap.set(inputRefs.title.current.material, {
-      opacity: 0,
-    });
-
     // Create and start animation timeline
     const tl = gsap.timeline({
-      delay: 2,
+      delay: 1,
     });
 
-    // Animate title
-    //@ts-ignore
-    tl.to(inputRefs.title.current.material, {
-      opacity: 1,
-      duration: 1,
-      ease: 'power2.inOut',
+    // Animate elements
+    elements.forEach((el, index) => {
+      if (el instanceof HTMLElement) {
+        tl.to(
+          el,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: 'power2.out',
+          },
+          index * 0.1,
+        );
+      }
     });
-
-    // Animate form elements
-    tl.to(
-      formElements,
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: 'power2.out',
-      },
-      '-=0.5',
-    );
 
     return () => {
       tl.kill();
     };
-  }, []);
+  }, [isReady]);
 
   return (
     <>
-      <Text
-        position={[150, 90, -150]}
-        anchorX="center"
-        anchorY="middle"
-        font="./fonts/SpaceMono-Regular.ttf"
-        fontSize={6}
-        ref={inputRefs.title}
-      >
-        Contact Me
-      </Text>
       <Html transform position={[150, 30, -150]} center scale={9.5}>
+        <h1 ref={inputRefs.title}>
+          <span
+            style={{
+              color: 'white',
+              fontSize: '30px',
+              font: './fonts/SpaceMono-Regular.ttf',
+              marginLeft: '35%',
+            }}
+          >
+            Get in touch
+          </span>
+          <br />
+        </h1>
         <form
           ref={formRef}
           onSubmit={handleSubmit}
